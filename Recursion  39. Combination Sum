@@ -1,0 +1,29 @@
+Input: candidates = [2,3,6,7], target = 7
+Output: [[2,2,3],[7]]
+Explanation:
+2 and 3 are candidates, and 2 + 2 + 3 = 7. Note that 2 can be used multiple times.
+7 is a candidate, and 7 = 7.
+These are the only two combinations.
+
+class Solution {
+    public static void recur(int ind,int target,int[] candidates,int n,List<List<Integer>> ans,List<Integer>ds){
+        if(ind==n){
+            if(target==0){
+                ans.add(new ArrayList<>(ds));
+            }
+            return ;
+        }
+        if(candidates[ind]<=target){
+            ds.add(candidates[ind]);
+            recur(ind,target-candidates[ind],candidates,n,ans,ds);
+            ds.remove(ds.size()-1);
+        }
+        recur(ind+1,target,candidates,n,ans,ds);
+    }
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        int n=candidates.length;
+        List<List<Integer>> ans=new ArrayList<>();
+        recur(0,target,candidates,n,ans,new ArrayList<>());
+        return ans;
+    }
+}
