@@ -1,0 +1,63 @@
+Input: candidates = [10,1,2,7,6,1,5], target = 8
+Output: 
+[
+[1,1,6],
+[1,2,5],
+[1,7],
+[2,6]
+]
+
+
+class Solution {
+    public static void recur(int i,int target,int[] arr,HashSet<List<Integer>> hs,List<Integer>ds){
+        if(i==arr.length){
+            if(target==0){
+                List<Integer> a=new ArrayList<>(ds);
+                Collections.sort(a);
+                hs.add(a);
+            }
+            return;
+        }
+        if(arr[i]<=target){
+            ds.add(arr[i]);
+            recur(i+1,target-arr[i],arr,hs,ds);
+            ds.remove(ds.size()-1);
+        }
+        recur(i+1,target,arr,hs,ds);
+    }
+    public List<List<Integer>> combinationSum2(int[] arr, int target) {
+        HashSet<List<Integer>> hs=new HashSet<>();
+        
+        recur(0,target,arr,hs,new ArrayList<>());
+        List<List<Integer>> ans=new ArrayList<>(hs);
+        return ans;
+    }
+}
+
+This code will give tle. as we are sorting each arraylist.
+
+
+
+SOLUTION 2:::
+
+class Solution {
+   public static void recur(int ind,int target,int[] arr,List<List<Integer>> ans,List<Integer>ds){
+       if(target==0){
+           ans.add(new ArrayList<>(ds));
+       }
+       for(int i=ind;i<arr.length;i++){
+           if(i>ind && arr[i]==arr[i-1]) continue;
+           if(arr[i]>target) break;
+           ds.add(arr[i]);
+           recur(i+1,target-arr[i],arr,ans,ds);
+           ds.remove(ds.size()-1);
+       }
+   }
+    public List<List<Integer>> combinationSum2(int[] arr, int target) {
+      Arrays.sort(arr);
+      List<List<Integer>> ans=new ArrayList<>();
+      recur(0,target,arr,ans,new ArrayList<>());
+      return ans;
+    }
+}
+  
