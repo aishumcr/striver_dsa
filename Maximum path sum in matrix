@@ -1,0 +1,54 @@
+Given a NxN matrix of positive integers. There are only three possible moves from a cell Matrix[r][c].
+
+Matrix [r+1] [c]
+Matrix [r+1] [c-1]
+Matrix [r+1] [c+1]
+Starting from any column in row 0 return the largest sum of any of the paths up to row N-1.
+
+NOTE: We can start from any column in zeroth row and can end at any column in (N-1)th row.
+
+Example 1:
+
+Input: N = 2
+Matrix = {{348, 391},
+          {618, 193}}
+Output: 1009
+Explaination: The best path is 391 -> 618. 
+It gives the sum = 1009.
+
+
+class Solution{
+     public static int recur(int[][] mat, int i, int j, int n, int m, int[][]dp) {
+        if (i < 0 || j < 0 || i >= n || j >= m ) {
+            return 0;
+        }
+        if(dp[i][j]!=0) return dp[i][j];
+        //int right = recur(mat, i, j + 1, n, m, dp);
+        int down = recur(mat, i + 1, j, n, m, dp);
+        int left = recur(mat, i+1, j - 1, n, m, dp);
+        int up = recur(mat, i + 1, j+1, n, m, dp);
+
+        // Find the maximum of the four directions and add 1 for the current cell
+        return dp[i][j]= mat[i][j]+ Math.max( down, Math.max(left, up));
+    }
+
+    static int maximumPath(int n, int matrix[][])
+    {
+       if (matrix == null || matrix.length == 0) {
+            return 0;
+        }
+    
+        //int n = matrix.length;
+        int m = matrix[0].length;
+        int maxPathLength = 0;
+        int[][] dp=new int[n][m];
+        // Try each cell as the starting point
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                maxPathLength = Math.max(maxPathLength, recur(matrix, i, j, n, m, dp));
+            }
+        }
+
+        return maxPathLength;
+    }
+}
