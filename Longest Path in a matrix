@@ -1,0 +1,90 @@
+Given a n*m matrix, find the maximum length path (starting from any cell) such that all cells along the path are in strictly increasing order.
+
+We can move in 4 directions from a given cell (i, j), i.e., we can move to (i+1, j) or (i, j+1) or (i-1, j) or (i, j-1).
+ 
+
+Example 1:
+
+Input: matrix = {{1,2,9},{5,3,8},{4,6,7}}
+Output: 7
+Explanation: The longest increasing path is
+{1,2,3,6,7,8,9}.
+public static int recur(int[][] mat, int i, int j, int n, int m, int prev) {
+        if (i < 0 || j < 0 || i >= n || j >= m || mat[i][j] <= prev) {
+            return 0;
+        }
+
+        int right = recur(mat, i, j + 1, n, m, mat[i][j]);
+        int down = recur(mat, i + 1, j, n, m, mat[i][j]);
+        int left = recur(mat, i, j - 1, n, m, mat[i][j]);
+        int up = recur(mat, i - 1, j, n, m, mat[i][j]);
+
+        // Find the maximum of the four directions and add 1 for the current cell
+        return 1 + Math.max(Math.max(right, down), Math.max(left, up));
+    }
+
+    public int longestIncreasingPath(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return 0;
+        }
+
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int maxPathLength = 0;
+
+        // Try each cell as the starting point
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                maxPathLength = Math.max(maxPathLength, recur(matrix, i, j, n, m, Integer.MIN_VALUE));
+            }
+        }
+
+        return maxPathLength;
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution{
+    public static int recur(int[][] mat, int i, int j, int n, int m, int prev,int[][]dp) {
+        if (i < 0 || j < 0 || i >= n || j >= m || mat[i][j] <= prev) {
+            return 0;
+        }
+        if(dp[i][j]!=0) return dp[i][j];
+        int right = recur(mat, i, j + 1, n, m, mat[i][j],dp);
+        int down = recur(mat, i + 1, j, n, m, mat[i][j],dp);
+        int left = recur(mat, i, j - 1, n, m, mat[i][j],dp);
+        int up = recur(mat, i - 1, j, n, m, mat[i][j],dp);
+
+        // Find the maximum of the four directions and add 1 for the current cell
+        return dp[i][j]= 1 + Math.max(Math.max(right, down), Math.max(left, up));
+    }
+
+    public int longestIncreasingPath(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return 0;
+        }
+    
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int maxPathLength = 0;
+        int[][] dp=new int[n][m];
+        // Try each cell as the starting point
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                maxPathLength = Math.max(maxPathLength, recur(matrix, i, j, n, m, Integer.MIN_VALUE,dp));
+            }
+        }
+
+        return maxPathLength;
+    }
+}
+    
